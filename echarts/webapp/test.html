@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Echarts3 - Example</title>
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+</head>
+<body>
+	<div id="main" style="width:1000px;height:900px;"></div>
+</body>
+<script src="js/jquery/jquery-1.8.0.min.js"></script>
+<script src="js/echarts3/echarts.js"></script>
+<script src="js/echarts3/china.js"></script>
+<script src="js/echarts3/hebei.js"></script>
+<script>
+	function randomData() {
+	    return Math.round(Math.random()*10);
+	}
+	var data = {
+		'电信':[	                
+            {name: '北京',value: randomData() },
+            {name: '天津',value: randomData() },
+            {name: '上海',value: randomData() },
+            {name: '重庆',value: randomData() },
+            {name: '河北',value: randomData() },
+            {name: '河南',value: randomData() },
+            {name: '云南',value: randomData() },
+            {name: '辽宁',value: randomData() },
+            {name: '黑龙江',value: randomData() },
+            {name: '湖南',value: randomData() },
+            {name: '安徽',value: randomData() },
+            {name: '山东',value: randomData() },
+            {name: '新疆',value: randomData() },
+            {name: '江苏',value: randomData() },
+            {name: '浙江',value: randomData() },
+            {name: '江西',value: randomData() },
+            {name: '湖北',value: randomData() },
+            {name: '广西',value: randomData() },
+            {name: '甘肃',value: randomData() },
+            {name: '山西',value: randomData() },
+            {name: '内蒙古',value: randomData() },
+            {name: '陕西',value: randomData() },
+            {name: '吉林',value: randomData() },
+            {name: '福建',value: randomData() },
+            {name: '贵州',value: randomData() },
+            {name: '广东',value: randomData() },
+            {name: '青海',value: randomData() },
+            {name: '西藏',value: randomData() },
+            {name: '四川',value: randomData() },
+            {name: '宁夏',value: randomData() },
+            {name: '海南',value: randomData() },
+            {name: '台湾',value: randomData() },
+            {name: '香港',value: randomData() },
+            {name: '澳门',value: randomData() }
+        ],
+    	'移动':[	                
+  			{name: '北京',value: randomData() },
+            {name: '天津',value: randomData() },
+            {name: '上海',value: randomData() },
+            {name: '重庆',value: randomData() },
+            {name: '河北',value: randomData() },
+            {name: '河南',value: randomData() },
+            {name: '云南',value: randomData() },
+            {name: '辽宁',value: randomData() },
+          ],
+      	'联通':[	                
+  			{name: '北京',value: randomData() },
+            {name: '天津',value: randomData() },
+            {name: '上海',value: randomData() },
+            {name: '重庆',value: randomData() },
+            {name: '河北',value: randomData() },
+            {name: '河南',value: randomData() },
+            {name: '云南',value: randomData() },
+            {name: '辽宁',value: randomData() },
+          ],
+       	'网通':[	                
+   			{name: '北京',value: randomData() },
+            {name: '天津',value: randomData() },
+            {name: '上海',value: randomData() },
+            {name: '重庆',value: randomData() },
+            {name: '河北',value: randomData() },
+            {name: '河南',value: randomData() },
+            {name: '云南',value: randomData() },
+            {name: '辽宁',value: randomData() },
+         ]
+	}
+	
+	var legendData = [];
+	var series = [];
+	
+	for(k in data){
+		var serie = {
+            name: k,
+            type: 'map',
+            mapType: 'china',
+            roam: false,
+            label: {
+                normal: {
+                    show: true
+                },
+                emphasis: {
+                    show: true
+                }
+            },
+            data:data[k]
+        };
+		legendData.push(k);
+		series.push(serie);
+	}
+	
+	// 基于准备好的dom，初始化echarts实例
+	var myChart = echarts.init(document.getElementById('main'));
+	
+	option = {
+	    title: {
+	        text: '主标题',
+	        subtext: '副标题',
+	        left: 'center'
+	    },
+	    tooltip: {
+	        trigger: 'item'
+	    },
+	    legend: {
+	        orient: 'vertical',
+	        left: 'left',
+	        data:legendData
+	    },
+	    visualMap: {
+	        min: 0,
+	        max: 50,
+	        left: 'left',
+	        top: 'bottom',
+	        text: ['多','少'],
+	        calculable: true
+	    },
+	    toolbox: {
+	        show: true,
+	        orient: 'vertical',
+	        left: 'right',
+	        top: 'center',
+	        feature: {
+	            dataView: {readOnly: false},
+	            restore: {},
+	            saveAsImage: {}
+	        }
+	    },
+	    series: series
+	};
+	
+	// 使用刚指定的配置项和数据显示图表。
+	myChart.setOption(option);
+	
+	var currMapType = 'china';
+	myChart.on('click', function (params) {
+        if(currMapType == 'china'){
+	        mt = params.name;
+        }else{
+        	mt = 'china';
+        }
+        currMapType = mt;
+        for(var i in option.series){
+        	option.series[i].mapType = mt;
+        }
+	    option.title.subtext = mt;
+	    myChart.setOption(option, true);
+	});
+</script>
+</html>

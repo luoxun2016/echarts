@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Echarts3 - Example</title>
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+</head>
+<body>
+	<div id="main" style="width:1000px;height:900px;"></div>
+</body>
+<script src="js/echarts-2.2.7/build/dist/echarts.js"></script>
+<script src="js/echarts-2.2.7/theme/macarons2.js"></script>
+<script>
+	function randomData() {
+	    return Math.round(Math.random()*20);
+	}
+	var data = {
+		'电信':[	                
+	        {name: '北京',value: randomData() },
+	        {name: '天津',value: randomData() },
+	        {name: '上海',value: randomData() },
+	        {name: '重庆',value: randomData() },
+	        {name: '河北',value: randomData() },
+	        {name: '河南',value: randomData() },
+	        {name: '云南',value: randomData() },
+	        {name: '辽宁',value: randomData() },
+	        {name: '黑龙江',value: randomData() },
+	        {name: '湖南',value: randomData() },
+	        {name: '安徽',value: randomData() },
+	        {name: '山东',value: randomData() },
+	        {name: '新疆',value: randomData() },
+	        {name: '江苏',value: randomData() },
+	        {name: '浙江',value: randomData() },
+	        {name: '江西',value: randomData() },
+	        {name: '湖北',value: randomData() },
+	        {name: '广西',value: randomData() },
+	        {name: '甘肃',value: randomData() },
+	        {name: '山西',value: randomData() },
+	        {name: '吕梁市',value: randomData() },
+	        {name: '内蒙古',value: randomData() },
+	        {name: '陕西',value: randomData() },
+	        {name: '吉林',value: randomData() },
+	        {name: '福建',value: randomData() },
+	        {name: '贵州',value: randomData() },
+	        {name: '广东',value: randomData() },
+	        {name: '青海',value: randomData() },
+	        {name: '西藏',value: randomData() },
+	        {name: '四川',value: randomData() },
+	        {name: '宁夏',value: randomData() },
+	        {name: '海南',value: randomData() },
+	        {name: '台湾',value: randomData() },
+	        {name: '香港',value: randomData() },
+	        {name: '澳门',value: randomData() }
+	    ],
+		'移动':[	                
+			{name: '北京',value: randomData() },
+	        {name: '天津',value: randomData() },
+	        {name: '重庆',value: randomData() },
+	        {name: '河南',value: randomData() },
+	        {name: '云南',value: randomData() },
+	        {name: '辽宁',value: randomData() },
+	      ],
+	  	'联通':[	                
+			{name: '北京',value: randomData() },
+	        {name: '天津',value: randomData() },
+	        {name: '上海',value: randomData() },
+	        {name: '重庆',value: randomData() },
+	        {name: '河北',value: randomData() },
+	        {name: '河南',value: randomData() },
+	        {name: '云南',value: randomData() },
+	        {name: '辽宁',value: randomData() },
+	      ],
+	   	'网通':[	                
+			{name: '北京',value: randomData() },
+	        {name: '天津',value: randomData() },
+	        {name: '上海',value: randomData() },
+	        {name: '河北',value: randomData() },
+	        {name: '河南',value: randomData() },
+	        {name: '辽宁',value: randomData() },
+	     ],
+	   	'教育网':[	                
+	        {name: '广西',value: randomData() },
+	        {name: '甘肃',value: randomData() },
+	        {name: '山西',value: randomData() },
+	        {name: '吕梁市',value: randomData() },
+	        {name: '内蒙古',value: randomData() },
+	        {name: '陕西',value: randomData() },
+	        {name: '吉林',value: randomData() },
+	        {name: '福建',value: randomData() },
+	        {name: '贵州',value: randomData() },
+	        {name: '广东',value: randomData() },
+	        {name: '青海',value: randomData() },
+	        {name: '西藏',value: randomData() },
+	        {name: '四川',value: randomData() },
+	        {name: '宁夏',value: randomData() },
+	        {name: '海南',value: randomData() },
+	        {name: '台湾',value: randomData() },
+	        {name: '香港',value: randomData() },
+	        {name: '澳门',value: randomData() },
+	     ],
+	   	'鹏博士':[	                
+	        {name: '山东',value: randomData() },
+	        {name: '新疆',value: randomData() },
+	        {name: '江苏',value: randomData() },
+	        {name: '浙江',value: randomData() },
+	        {name: '江西',value: randomData() },
+	        {name: '湖北',value: randomData() },
+	        {name: '广西',value: randomData() },
+	     ]
+	}
+	var netCityMap = {};
+	var tipCache = {};
+	var legendData = [];
+	var series = [];
+	
+	legendData.push('全部');
+	series.push({
+        name: '全部',
+        type: 'map',
+        mapType: 'china',
+        roam: false,
+        selectedMode: 'single',
+        data:[]
+	});
+	
+	for(var nettype in data){
+		var citydata = data[nettype];
+		var serie = {
+            name: nettype,
+            type: 'map',
+            mapType: 'china',
+            roam: false,
+            selectedMode: 'single',
+            data:citydata
+        };
+		legendData.push(nettype);
+		series.push(serie);
+		
+		for(var i = 0 ; i < citydata.length ; i++){
+			var city = citydata[i];
+			var key = city.name + "_" + nettype;
+			netCityMap[key] = city.value;
+		}
+	}
+	
+	require.config({
+	    paths: {
+	        echarts: 'js/echarts-2.2.7/build/dist'
+	    }
+	});
+	
+    require(
+            [
+            	'echarts',
+                'echarts/chart/map'
+            ],
+            function (ec) {
+                var myChart = ec.init(document.getElementById('main'), theme);
+    			var ecConfig = require('echarts/config');
+    			
+             	// 显示过渡
+                myChart.showLoading({
+                    text: '正在努力的读取数据中...',    //loading话术
+                });
+
+                // 加载数据
+
+                // 隐藏过渡
+                myChart.hideLoading();
+                
+             	// 图表使用-------------------
+                var option = {
+       				title : {
+       					text: 'CDN节点全国分布',
+       					subtext: '点击地图省份，查看详细数据',
+       				    sublink: 'http://www.powercdn.com',
+       				    x:'center'
+       				},
+       				tooltip : {
+       					trigger: 'item',
+       					showDelay: 0,
+       					backgroundColor: 'rgba(255,255,255,1.0)',
+       					borderColor: '#0088cc',
+       					borderWidth: 1,
+       					textStyle: {
+       						color: 'black'
+       					},
+       					formatter: function (params,ticket,callback){
+       			            var seriesName 	= params.seriesName;
+       			            var cityname 	= params.name;
+       			            var countvalue 	= params.value;
+       			            
+       			            if(seriesName.length == 0){
+       			            	return cityname + "：" + countvalue + "<br/>"
+       			            }
+       			            
+       			            var res = tipCache[cityname];
+       			            if(!res){
+       			            	res = cityname + " 共有CDN节点：" + countvalue + "<br/>";
+       			            	var arr = seriesName.replace(/(^\s*)|(\s*$)/g, "").split(" ");
+       			            	for(var i = 0 ; i < arr.length ;i++){
+       			            		var nettype = arr[i];
+       			            		var key = cityname + "_" + nettype;//地区 + 运营商
+       			            		var val = netCityMap[key];
+       			            		res += nettype + " CDN节点：" + val + "<br/>";
+       			            	}
+       			            	tipCache[ticket] = res;
+       			            }
+       			            return res;
+       			        }
+       				},
+       			    legend: {
+       			        orient: 'vertical',
+       			        x: 'left',
+       			     	selectedMode: 'single',
+       			        data:legendData
+       			    },
+       			    toolbox: {
+       			        show : true,
+       			        orient: 'vertical',
+       			        x:'right',
+       			        y:'center',
+       			        feature : {
+		       				restore : {
+		       			          show : true,
+		       			          title : '还原'
+		       			    },
+		       			    saveAsImage : {
+		       			          show : true,
+		       			          title : '保存为图片',
+		       			          type : 'png',
+		       			          lang : ['点击保存']
+		       			    },
+       			            dataView : {show: true, readOnly: false}
+       			        }
+       			    },
+       				series : series
+                };
+                myChart.setOption(option);
+                
+                var currMapType = 'china';
+    			// 绑定事件
+    			myChart.on(ecConfig.EVENT.MAP_SELECTED, function (param){
+    				alert("地图点击事件");
+    				
+			        if(currMapType == 'china'){
+				        var selected = param.selected;
+				        for (var i in selected) {
+				        	if (selected[i]) {
+				                mt = i;
+				                break;
+				            }
+				        }
+			        }else{
+			        	mt = 'china';
+			        }
+			        currMapType = mt;
+			        for(var i in option.series){
+			        	option.series[i].mapType = mt;
+			        }
+    			    option.title.subtext = mt;
+    			    myChart.setOption(option, true);
+    			});
+    			
+    			myChart.on(ecConfig.EVENT.LEGEND_SELECTED, function(param){
+    				var selected = param.selected;
+    				var selectedArray = [];
+    				for(var key in selected){
+    					var f = selected[key];
+    					if(f){
+    						selectedArray.push(key);
+    					}
+    				}
+    				
+    				color = ['#EEEEEE','#EEEEEE'];
+    				if(selectedArray.length == 1){
+    					var selectedName = selectedArray[0];
+    					if(selectedName == '全部'){
+    						myChart.restore();
+    					}else{
+    						color = ['#CDB38B','#CDB38B'];
+    					}
+    				}
+    				
+					option.dataRange = {
+							min: 0,
+							max: 100,
+							color: color,
+							show: false
+					};
+    				
+    				myChart.setOption(option, true);
+    			});
+    			
+    			myChart.on(ecConfig.EVENT.RESTORE, function(param){
+    				color = ['#EEEEEE','#EEEEEE'];
+					option.dataRange = {
+							min: 0,
+							max: 100,
+							color: color,
+							show: false
+					};
+    				myChart.setOption(option, true);
+    			});
+            }
+    );
+	
+</script>
+</html>
